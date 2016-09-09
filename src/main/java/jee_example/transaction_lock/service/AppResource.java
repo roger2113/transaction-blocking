@@ -1,6 +1,7 @@
 package jee_example.transaction_lock.service;
 
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
@@ -19,11 +20,14 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
 
 import jee_example.transaction_lock.service.domain.Book;
 
 @Path("book")
 public class AppResource {
+	
+	public static final Logger LOGGER = Logger.getLogger(AppResource.class.getName());
 	
 	private AppRepository appRepository;
 	
@@ -43,12 +47,12 @@ public class AppResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findBook(@PathParam("id") int id, @Context Request request) {
 		Book book = appRepository.findBook(id).orElseThrow(() -> new NotFoundException("Book has not been found."));
-		CacheControl cc = new CacheControl();
-		cc.setMaxAge(86400);
+
 		EntityTag etag = new EntityTag(Integer.toString(book.hashCode()));
 		ResponseBuilder builder = request.evaluatePreconditions(etag);
-		if(builder != null) return builder.cacheControl(cc).tag(etag).build();
-		return Response.ok(book).tag(etag).build();
+		return (builder != null) ? 
+					builder.tag(etag).build()
+					: Response.ok(book).tag(etag).build();
 	}
 	
 	@POST
@@ -62,14 +66,17 @@ public class AppResource {
 	@PUT
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Produces({MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN})
 	public Response updateBook(@PathParam("id") int id,
-			                   @Context Request request, Book bookToUpdate){
+			                   @Context Request request, 
+			                   Book bookToUpdate){
 		Book book = appRepository.findBook(id).orElseThrow(() -> new NotFoundException("Book has not been found."));
 		EntityTag etag = new EntityTag(Integer.toString(book.hashCode()));
 		ResponseBuilder builder = request.evaluatePreconditions(etag);
-		if(builder != null) return builder.build();
-		return Response.ok(appRepository.updateBook(bookToUpdate)).build();
+		return (builder != null) ? 
+					builder.build() 
+					: Response.ok(appRepository.updateBook(bookToUpdate)).
+					  tag(Integer.toString(book.hashCode())).build();
 	}
 	
 	@DELETE

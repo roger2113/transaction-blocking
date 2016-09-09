@@ -18,7 +18,7 @@ public class SheduledRequest_DSLock {
 
 	private static final Logger LOGGER = Logger.getLogger(SheduledRequest_DSLock.class.getName());
 
-	public final static String BASE_URL = "http://localhost:8080/transactions/book/1";
+	public final static String BASE_URL = "http://localhost:8080/transactions/book/2";
 
 	static Client client1;
 	static Client client2;
@@ -54,10 +54,10 @@ public class SheduledRequest_DSLock {
 		
 		book.setPrice(random.nextInt(40));
 		
-		LOGGER.info("Try to update entity from client_2: " + book.toString());
+		LOGGER.info(String.format("Try to update entity from client_2: %s ", book));
 		updateItem(client2, Entity.json(book));
 			
-		LOGGER.info("Try to update entity from client_1: " + book.toString());
+		LOGGER.info(String.format("Try to update entity from client_1: %s ", book));
 		updateItem(client1, Entity.json(book));
 		
 		LOGGER.info("Closing clients...");

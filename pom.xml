@@ -17,7 +17,7 @@
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
 
-	<dependencies>
+	<dependencies><!--  
 		<dependency>
 			<groupId>org.jboss.resteasy</groupId>
 			<artifactId>resteasy-jaxrs</artifactId>
@@ -29,7 +29,7 @@
 			<artifactId>resteasy-multipart-provider</artifactId>
 			<version>2.2.0.GA</version>
 			<scope>provided</scope>
-		</dependency>
+		</dependency>-->
 		<!-- Java EE -->
 		<dependency>
 			<groupId>javax</groupId>

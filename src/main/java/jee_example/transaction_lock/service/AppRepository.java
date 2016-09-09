@@ -35,10 +35,7 @@ public class AppRepository {
 
 	public Book updateBook(Book book) {
 		Objects.requireNonNull(book);
-		LOGGER.info(String.format("Book from request '%s'", book));
 		Book updatedBook = entityManager.find(Book.class, book.getId());
-		LOGGER.info(String.format("Book from datasource '%s'", updatedBook));
-
 		/*
 		if (book.getVersion() < updatedBook.getVersion()) {
 			throw new OptimisticLockException(
