@@ -34,16 +34,16 @@ public class SheduledRequest_DSLock {
 		return response;
 	}
 
-	private static Object updateItem(Client client, Entity entity) {
+	private static Response updateItem(Client client, Entity entity) {
 		LOGGER.info(String.format("Sending request for update..."));
-		Book response = client.target(BASE_URL).
+		Response response = client.target(BASE_URL).
 				request().
-				put(entity, Book.class);
-		LOGGER.info(String.format("Entity has been updated. Entity info: '%s", response));
+				put(entity);
+		LOGGER.info(String.format("Entity has been updated. Entity info: '%s", response.readEntity(Book.class)));
 		return response;
 	}
 
-	//@Schedule(hour = "*", minute = "*")
+	@Schedule(hour = "*", minute = "*")
 	public void emulateLocking() {
 		
 		LOGGER.info("Starting... Initializing clients...");
@@ -52,11 +52,11 @@ public class SheduledRequest_DSLock {
 		
 		Book book = getEntity(client1, Book.class);
 		
-		book.setPrice(random.nextInt(40));
-		
+		book.setPrice(random.nextInt(40));	
 		LOGGER.info(String.format("Try to update entity from client_2: %s ", book));
 		updateItem(client2, Entity.json(book));
-			
+		
+		book.setPrice(random.nextInt(40));
 		LOGGER.info(String.format("Try to update entity from client_1: %s ", book));
 		updateItem(client1, Entity.json(book));
 		

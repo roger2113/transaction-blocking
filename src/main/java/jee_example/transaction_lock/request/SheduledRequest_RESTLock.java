@@ -47,7 +47,7 @@ public class SheduledRequest_RESTLock {
 			return response;
 		}
 		LOGGER.info(String.format("Response status = %s(%s)", response.getStatus(), response.getStatusInfo()));
-		LOGGER.info(String.format("Entity has been updated. Entity info: %s; response ETag: %s", 
+		LOGGER.info(String.format("Entity has been updated. Entity info: %s; response updated ETag: %s", 
 									response.readEntity(entity.getEntity().getClass()), response.getEntityTag()));
 		return response;
 	}
@@ -64,7 +64,7 @@ public class SheduledRequest_RESTLock {
 		EntityTag etag = response.getEntityTag();
 		response.close();
 		
-		LOGGER.info(String.format("Got entity: %s; response ETag: %s", book, etag));
+		LOGGER.info(String.format("Got entity: %s; with ETag: %s", book, etag));
 			
 		book.setPrice(random.nextInt(40));
 		
