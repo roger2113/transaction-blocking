@@ -52,7 +52,7 @@ public class SheduledRequest_RESTLock {
 		return response;
 	}
 
-	//@Schedule(hour = "*", minute = "*", second = "30")
+	@Schedule(hour = "*", minute = "*", second = "30")
 	public void emulateLocking() {
 		
 		LOGGER.info("Starting... Initializing clients...");
